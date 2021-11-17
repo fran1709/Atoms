@@ -11,7 +11,7 @@
 #include <fstream>
 #include <string>
 #include <stack>
-#include <nlohmann/json.hpp> //Have to install library https://github.com/nlohmann/json#integration
+#include <nlohmann/json.hpp> //Have to install library  
 
 using namespace std;
 using json = nlohmann::json;
@@ -63,7 +63,7 @@ stack<Atom>* atomPrimals() {
     for (json::iterator it = atomsData.begin(); it != atomsData.end(); ++it) {
         Atom *newAtom = new Atom();
         newAtom->setNombre(it.key());
-        newAtom->setRelation(it.value());
+        newAtom->setRelation(*it);
         primalsAtoms->push(*newAtom);
         //cout << it.key() <<"  " << *it <<endl;
         //cout << newAtom->getNombre() <<" " << newAtom->getRelation()<<endl;

@@ -25,7 +25,7 @@ class Atom: public INodo {
         }
 
         void setRelation(string pRelation) {
-
+            this->relation = pRelation;
         }
 
     private:

@@ -87,7 +87,7 @@ class Grafo {
 
         vector<INodo> deepPath(INodo* pOrigen) {  //recorrido en profundidad
             vector<INodo> result;
-
+            
             return result;
         } 
 

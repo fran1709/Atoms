@@ -14,7 +14,7 @@ using namespace std;
 int main() {
     // Identando el grafo.
     Grafo atomsGame(true);
+    
     // Cargamos el grafo de los nodos Atom.
     updateGrafo(atomsGame);
-
 }
