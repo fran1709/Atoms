@@ -11,7 +11,7 @@
 #include <fstream>
 #include <string>
 #include <stack>
-#include <nlohmann/json.hpp> //Have to install library  
+#include "../nlohmann/json.hpp" //Have to install library  
 
 using namespace std;
 using json = nlohmann::json;

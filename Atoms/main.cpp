@@ -9,6 +9,9 @@
 #include "directory/factory/jasonData.h"
 #include "directory/factory/updating.h"
 
+
+//g++ main.cpp
+//./a.exe
 using namespace std;
 
 int main() {
