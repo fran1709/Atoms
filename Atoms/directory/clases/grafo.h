@@ -19,8 +19,8 @@ class Grafo {
         void resetNodes() {
             for (std::vector<NodoGrafo*>::iterator current = listaNodos.begin() ; current != listaNodos.end(); ++current) {
                 NodoGrafo* actual = (*current);
-                actual->procesado = false;
-                actual->visitado = false;
+                actual->setProcesado(false);
+                actual->setVisitado(false);
             }
         }
 
@@ -28,7 +28,7 @@ class Grafo {
             NodoGrafo* result = nullptr;
             for (std::vector<NodoGrafo*>::iterator current = listaNodos.begin() ; current != listaNodos.end(); ++current) {
                 NodoGrafo* actual = (*current);
-                if (!actual->visitado) {
+                if (!actual->getVisitado()) {
                     result = actual;
                     break;
                 }
@@ -100,14 +100,14 @@ class Grafo {
 
             NodoGrafo* puntoPartida = this->getNodo(pOrigen->getId());
             nodosProcesados.push(puntoPartida);
-            puntoPartida->procesado = true;
+            puntoPartida->setProcesado(true);
             
             do {
                 while (!nodosProcesados.empty()) {
                     NodoGrafo* actual = nodosProcesados.front();
                     nodosProcesados.pop();
 
-                    actual->visitado = true;
+                    actual->setVisitado(true);
                     visitados++;
                     result.push_back(actual->getInfo());
 
@@ -116,9 +116,9 @@ class Grafo {
                     for (int indiceArcos=0; indiceArcos<adyacentes->size(); ++indiceArcos) {
                         Arco* arco = adyacentes->at(indiceArcos);
                         NodoGrafo* adyacente = (NodoGrafo*)arco->getDestino();
-                        if (!adyacente->procesado) {
+                        if (!adyacente->getProcesado()) {
                             nodosProcesados.push(adyacente);
-                            adyacente->procesado = true;
+                            adyacente->setProcesado(true);
                         }
                     }
                 }
@@ -126,7 +126,7 @@ class Grafo {
                 if (visitados<this->getSize()) {
                     puntoPartida = this->findNotVisited();
                     nodosProcesados.push(puntoPartida);
-                    puntoPartida->procesado = true;
+                    puntoPartida->setProcesado(true);
                 }
             } while (visitados<this->getSize()); 
 
