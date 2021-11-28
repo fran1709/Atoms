@@ -238,14 +238,14 @@ class Grafo {
          * @brief Find the path with the smallest weight value.
          * 
          * @param pDistance 
-         * @param verSet 
+         * @param pVertex 
          * @return int 
          */
-        int minDistance(int pDistance[], bool verSet[]){
+        int minDistance(int pDistance[], bool pVertex[]){
             int min = INT_MAX;
             int minIndex;
             for (int i = 0; i < this->getSize(); i++){
-                if (verSet[i] == false && pDistance[i] <= min){
+                if (pVertex[i] == false && pDistance[i] <= min){
                     min = pDistance[i], minIndex = i;
                 }
             }
