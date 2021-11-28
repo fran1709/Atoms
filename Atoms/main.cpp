@@ -20,4 +20,5 @@ int main() {
     
     // Cargamos el grafo de los nodos Atom.
     updateGrafo(atomsGame);
+
 }

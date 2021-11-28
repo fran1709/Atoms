@@ -6,10 +6,11 @@
 
 using namespace std;
 
+static int cont = 0;
 class Atom: public INodo {
     public:
         Atom() {
-            this->setId(rand()*99999999999);
+            this->setId(cont++);
         }
 
         string getNombre() {

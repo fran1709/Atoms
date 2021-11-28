@@ -30,23 +30,23 @@ class NodoGrafo {
         }
 
         INodo* getInfo() {
-            return dato;
+            return this->dato;
         }
 
         bool getVisitado(){
-            return visitado;
+            return this->visitado;
         }
 
         void setVisitado(bool v){
-            visitado = v;
+            this->visitado = v;
         }
 
         bool getProcesado(){
-            return procesado;
+            return this->procesado;
         }
 
         void setProcesado(bool p){
-            procesado = p;
+            this->procesado = p;
         }
 
         void addArc(Arco* pArco) {

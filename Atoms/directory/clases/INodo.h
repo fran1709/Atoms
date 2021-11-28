@@ -4,7 +4,7 @@
 class INodo {
     public:
         int getId() {
-            return id;
+            return this->id;
         }
 
         void setId(int pId) {

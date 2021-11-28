@@ -45,6 +45,10 @@ class Grafo {
             return this->listaNodos.size();
         }
 
+         vector<NodoGrafo*> getNodos() {
+            return this->listaNodos;
+        }
+
         void addNode(INodo* pNodo) {
             NodoGrafo* nuevoNodo = new NodoGrafo(pNodo);
             this->listaNodos.push_back(nuevoNodo);
@@ -85,8 +89,44 @@ class Grafo {
             return hashNodos.at(pId);
         }
 
-        vector<INodo> deepPath(INodo* pOrigen) {  //recorrido en profundidad
-            vector<INodo> result;
+        vector<INodo*> deepPath(INodo* pOrigen) {  //recorrido en profundidad
+            vector<INodo*> result;
+            stack<NodoGrafo*> nodosProcesados;
+            int visitados = 0;
+
+            resetNodes();
+
+            NodoGrafo* puntoPartida = this->getNodo(pOrigen->getId());
+            nodosProcesados.push(puntoPartida);
+            puntoPartida->setProcesado(true);
+
+            do {
+                while (!nodosProcesados.empty()) {
+                    NodoGrafo* actual = nodosProcesados.top();
+                    nodosProcesados.pop();
+
+                    actual->setVisitado(true);
+                    visitados++;
+                    result.push_back(actual->getInfo());
+
+                    vector<Arco*> *adyacentes = actual->getArcs();
+
+                    for (int indiceArcos=0; indiceArcos<adyacentes->size(); ++indiceArcos) {
+                        Arco* arco = adyacentes->at(indiceArcos);
+                        NodoGrafo* adyacente = (NodoGrafo*)arco->getDestino();
+                        if (!adyacente->getProcesado()) {
+                            nodosProcesados.push(adyacente);
+                            adyacente->setProcesado(true);
+                        }
+                    }
+                }
+
+                if (visitados<this->getSize()) {
+                    puntoPartida = this->findNotVisited();
+                    nodosProcesados.push(puntoPartida);
+                    puntoPartida->setProcesado(true);
+                }
+            } while (visitados<this->getSize());
             
             return result;
         } 
@@ -134,11 +174,45 @@ class Grafo {
         }
 
 
-        vector<INodo> path(INodo* pOrigen, INodo* pDestino) { // debe retornar un camino, el primero que encuentre estre el nodo oriegn y destino
+        vector<INodo*> path(INodo* pOrigen, INodo* pDestino) { // debe retornar un camino, el primero que encuentre estre el nodo oriegn y destino
             // en caso de que no haya camino, result se retorna vacío
-            vector<INodo> result;
+            vector<INodo*> result1 = deepPath(pOrigen);
+            vector<INodo*> result2 = broadPath(pOrigen);
+            bool isNodo = false;
+            vector<INodo*> finalPath1;
+            vector<INodo*> finalPath2;
+            vector<INodo*> bestPath;
 
-            return result;
+            for (std::vector<INodo*>::iterator current = result1.begin() ; current != result1.end(); ++current) {
+                INodo* actual = (*current);
+                finalPath1.push_back(actual);
+                if (actual->getId() == pDestino->getId()) {
+                    isNodo = true;
+                    break;
+                }
+            }
+
+            for (std::vector<INodo*>::iterator current = result2.begin() ; current != result2.end(); ++current) {
+                INodo* actual = (*current);
+                finalPath2.push_back(actual);
+                if (actual->getId() == pDestino->getId()) {
+                    isNodo = true;
+                    break;
+                }
+            }
+
+            if (finalPath1.size() < finalPath2.size()) {
+                bestPath = finalPath1;
+            }
+            else {
+                bestPath = finalPath2;
+            }
+            
+            if (isNodo == false) {
+                bestPath.clear();
+            }
+
+            return bestPath;
         }
 
         void printCounters() {
@@ -146,6 +220,84 @@ class Grafo {
                 NodoGrafo* actual = (*current);
                 cout << actual->getInfo()->getId() << " tiene " << actual->getArcs()->size() << endl;
             }
+        }
+
+        int* getIds() {
+            int ids[listaNodos.size()];
+            int it = 0;
+            for (std::vector<NodoGrafo*>::iterator current = listaNodos.begin() ; current != listaNodos.end(); ++current) {
+                NodoGrafo* actual = (*current);
+                ids[it] = actual->getInfo()->getId();
+                it++;
+            }
+            int *point = ids;
+            return point;
+        }
+
+        /**
+         * @brief Find the path with the smallest weight value.
+         * 
+         * @param pDistance 
+         * @param verSet 
+         * @return int 
+         */
+        int minDistance(int pDistance[], bool verSet[]){
+            int min = INT_MAX;
+            int minIndex;
+            for (int i = 0; i < this->getSize(); i++){
+                if (verSet[i] == false && pDistance[i] <= min){
+                    min = pDistance[i], minIndex = i;
+                }
+            }
+            return minIndex;
+        }
+
+        /**
+         * @brief Show the created path.
+         * 
+         * @param pDistance 
+         */
+        void showPath(int pDistance[]){
+            cout << "Distancia mas corta de un nodo a todos." << endl;
+            for (int i = 0; i < this->getSize(); i++) {
+                cout << i << "\t\t" << pDistance[i] << endl;
+            }
+        }
+
+        /**
+         * @brief Find and create the shortest paths to all nodes in a graph.
+         * 
+         * @param pMatrix 
+         * @param pStart 
+         */
+        void dijkstra(int **pMatrix, int pStart){
+            int size = this->getSize();
+            int route[size];
+            bool vertex[size];
+
+            // sets all distances to infinity and sets all as unvisited = false
+            for (int iter = 0; iter < size; iter++){
+                route[iter] = INT_MAX;
+                vertex[iter] = false;
+            }
+
+            // you define the distance to itself.
+            route[pStart] = 0;
+
+            // updates the arrays of the tour according to their weights and marks the nodes as visited.
+            for (int iter = 0; iter < size - 1; iter++){
+                int x = minDistance(route, vertex);
+                vertex[x] = true;
+
+                for (int p = 0; p < size; p++){
+                    if (!vertex[p] && pMatrix[x][p] && route[x] != INT_MAX && route[x] + pMatrix[x][p] < route[p]) {    
+                        route[p] = route[x] + pMatrix[x][p];
+                    }
+                }
+            }
+
+            // show the paths
+            showPath(route);
         }
 };
 

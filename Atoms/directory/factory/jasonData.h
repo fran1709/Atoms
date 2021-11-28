@@ -58,13 +58,13 @@ void printJasonData(json pJson) {
 stack<Atom>* atomPrimals() {
 
     json atomsData = readJsonAtoms();
-    stack<Atom> *primalsAtoms = new stack<Atom>();
+    stack<Atom>* primalsAtoms = new stack<Atom>();
 
     for (json::iterator it = atomsData.begin(); it != atomsData.end(); ++it) {
-        Atom *newAtom = new Atom();
-        newAtom->setNombre(it.key());
-        newAtom->setRelation(*it);
-        primalsAtoms->push(*newAtom);
+        Atom newAtom =  Atom();
+        newAtom.setNombre(it.key());
+        newAtom.setRelation(*it);
+        primalsAtoms->push(*&newAtom);
         //cout << it.key() <<"  " << *it <<endl;
         //cout << newAtom->getNombre() <<" " << newAtom->getRelation()<<endl;
     }
