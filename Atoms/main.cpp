@@ -20,4 +20,10 @@ int main() {
     
     // Cargamos el grafo de los nodos Atom.
     updateGrafo(atomsGame);
+
+    // solicitud de generaciones al usuario.
+    int quantity;
+    cout << "Cuántas generaciones desea ejecutar: ";
+    cin >> quantity;
+    bigBang(quantity);
 }

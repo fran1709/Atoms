@@ -6,6 +6,11 @@
 #include "MatrizAdyacencia.h"
 #include "../clases/grafo.h"
 
+/**
+ * @brief Creación inicial del grafo.
+ * 
+ * @param pGrafo 
+ */
 void updateGrafo(Grafo &pGrafo) {
     // Identando los atomos primordiales.
     stack<Atom>* primalAtoms = atomPrimals();
@@ -34,30 +39,40 @@ void updateGrafo(Grafo &pGrafo) {
     //pGrafo.addArc(&second, &first, 10);
      //pGrafo.addArc(&second, &third, 70);
     //pGrafo.addArc(&third, &second, 1);
+    int cont = 0;
     for (std::vector<NodoGrafo*>::iterator current = nodos.begin() ; current != nodos.end(); ++current) {
         int weight = rand() % 25 + 1; 
-        int weight2 = rand() % 25 + 1;  
+        int weight2 = rand() % 25 + 1; 
+        int weight3 = rand() % 25 + 1;
         NodoGrafo* actual = (*current);
         int idDest = rand() % 6; 
         int idDes2 = rand() % 6;
-        int cont = 0;
+        int idDes3 = rand() % 6;
+        cont = 0;
+        cout << actual->getInfo()->getName()<<endl;
         for (std::vector<NodoGrafo*>::iterator curre = nodos.begin() ; curre != nodos.end(); ++curre) {
-            if (idDest == cont) {
-                NodoGrafo* actu = (*curre);
+            NodoGrafo* actu = (*curre);
+            if (actual->getInfo()->getName().compare("Inti") == 0) {
                 pGrafo.addArc(actual, actu, weight);
-            } else if (idDes2 == cont) {
-                NodoGrafo* actu = (*curre);
-                pGrafo.addArc(actual, actu, weight2);
+                break;
+            } else {
+                if (idDest == cont) {
+                    pGrafo.addArc(actual, actu, weight);
+                } else if (idDes2 == cont) {
+                    pGrafo.addArc(actual, actu, weight2);
+                } else if(idDes3 == cont ) {
+                    pGrafo.addArc(actual, actu, weight3);
+                }
             }
             cont++;
         }
     }
 
     //Imprimiendo
-    cout <<"Atomo: " <<first.getNombre() << "\tVinculo: " << first.getRelation() << endl;
-    cout <<"Atomo: " <<second.getNombre() << "\tVinculo: " << second.getRelation() << endl;
-    cout <<"Atomo: " <<third.getNombre() << "\tVinculo: " << third.getRelation() << endl;
-    cout <<endl;
+    // cout <<"Atomo: " <<first.getNombre() << "\tVinculo: " << first.getRelation() << endl;
+    // cout <<"Atomo: " <<second.getNombre() << "\tVinculo: " << second.getRelation() << endl;
+    // cout <<"Atomo: " <<third.getNombre() << "\tVinculo: " << third.getRelation() << endl;
+    // cout <<endl;
 
     pGrafo.printCounters();
     // Imprimiendo DeepPath
@@ -78,6 +93,15 @@ void updateGrafo(Grafo &pGrafo) {
         pGrafo.dijkstra(matrix.getMatrix(),it);
     }
     
+}
+
+/**
+ * @brief Creación de n generaciones a partir del grafo creado inicialmente. 
+ * 
+ * @param pQuantity 
+ */
+void bigBang(int pQuantity) {
+
 }
 
 #endif // _UPDATING_

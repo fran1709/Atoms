@@ -12,6 +12,10 @@ class Atom: public INodo {
         Atom() {
             this->setId(cont++);
         }
+        Atom(string pName) {
+            this->setId(cont++);
+            this->setName(pName);
+        }
 
         int getQuantity() {
             return this->quantity;
@@ -45,7 +49,16 @@ class Atom: public INodo {
             this->idDestination = pId;
         }
 
+        string getTipo() {
+            return this->tipo;
+        }
+
+        void setTipo(string pTipo) {
+            this->tipo = pTipo;
+        }
+
     private:
+        string tipo;
         string nombre;
         string relation;
         int quantity;
