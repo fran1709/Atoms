@@ -13,6 +13,14 @@ class Atom: public INodo {
             this->setId(cont++);
         }
 
+        int getQuantity() {
+            return this->quantity;
+        }
+
+        void setQuantity(int pQuantity) {
+            this->quantity = pQuantity;
+        }
+
         string getNombre() {
             return this->nombre;
         }
@@ -29,9 +37,19 @@ class Atom: public INodo {
             this->relation = pRelation;
         }
 
+        int getIdDestination() {
+            return this->idDestination;
+        }
+
+        void setIdDestination(int pId) {
+            this->idDestination = pId;
+        }
+
     private:
         string nombre;
         string relation;
+        int quantity;
+        int idDestination;
 };
 
 #endif  // _ATOM_

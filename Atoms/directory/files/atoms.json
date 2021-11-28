@@ -1,5 +1,5 @@
 {
-    "Galea" : "Katmeo",
-    "Inti" : "Galea",
-    "Katmeo" : "Inti"
+    "Galea" : ["Katmeo", 2, 2],
+    "Inti" : ["Galea", 2, 0],
+    "Katmeo" : ["Inti", 2, 1]
 }

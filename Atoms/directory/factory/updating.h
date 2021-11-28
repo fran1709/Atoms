@@ -15,18 +15,43 @@ void updateGrafo(Grafo &pGrafo) {
     primalAtoms->pop();
     Atom third = primalAtoms->top();
     primalAtoms->pop();
+    Atom fourth = primalAtoms->top();
+    primalAtoms->pop();
+    Atom five = primalAtoms->top();
+    primalAtoms->pop();
+    Atom six = primalAtoms->top();
+    primalAtoms->pop();
 
     // Agregamos los nodos al grafo.
-    Atom allAtoms[] = {first, second, third};
-    for(int i=0; i<3; i++) {
-        pGrafo.addNode(&allAtoms[i]);
+    Atom allAtoms[] = {first, second, third, fourth, five, six};
+    for(int i=0; i<6; i++) { // para cada nodo
+        pGrafo.addNode(&allAtoms[i]);   
     }
 
     // Agregando arcos a los nodos
-    pGrafo.addArc(&first, &third, 25);
-    pGrafo.addArc(&second, &first, 50);
-    //pGrafo.addArc(&second, &third, 70);
-    pGrafo.addArc(&third, &second, 100);
+    vector<NodoGrafo*> nodos = pGrafo.getNodos();
+    //pGrafo.addArc(&first, &third, 15);
+    //pGrafo.addArc(&second, &first, 10);
+     //pGrafo.addArc(&second, &third, 70);
+    //pGrafo.addArc(&third, &second, 1);
+    for (std::vector<NodoGrafo*>::iterator current = nodos.begin() ; current != nodos.end(); ++current) {
+        int weight = rand() % 25 + 1; 
+        int weight2 = rand() % 25 + 1;  
+        NodoGrafo* actual = (*current);
+        int idDest = rand() % 6; 
+        int idDes2 = rand() % 6;
+        int cont = 0;
+        for (std::vector<NodoGrafo*>::iterator curre = nodos.begin() ; curre != nodos.end(); ++curre) {
+            if (idDest == cont) {
+                NodoGrafo* actu = (*curre);
+                pGrafo.addArc(actual, actu, weight);
+            } else if (idDes2 == cont) {
+                NodoGrafo* actu = (*curre);
+                pGrafo.addArc(actual, actu, weight2);
+            }
+            cont++;
+        }
+    }
 
     //Imprimiendo
     cout <<"Atomo: " <<first.getNombre() << "\tVinculo: " << first.getRelation() << endl;
@@ -49,7 +74,10 @@ void updateGrafo(Grafo &pGrafo) {
     matrix.updateMatriz(pGrafo);
 
     // dijkstra
-    pGrafo.dijkstra(matrix.getMatrix(),0);
+    for (int it=0; it < pGrafo.getSize(); it++) {
+        pGrafo.dijkstra(matrix.getMatrix(),it);
+    }
+    
 }
 
 #endif // _UPDATING_

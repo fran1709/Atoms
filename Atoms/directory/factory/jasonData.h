@@ -61,10 +61,14 @@ stack<Atom>* atomPrimals() {
     stack<Atom>* primalsAtoms = new stack<Atom>();
 
     for (json::iterator it = atomsData.begin(); it != atomsData.end(); ++it) {
-        Atom newAtom =  Atom();
-        newAtom.setNombre(it.key());
-        newAtom.setRelation(*it);
-        primalsAtoms->push(*&newAtom);
+        for (int j=0; j<it.value().at(1); j++) { // n cantidad de nodos
+            Atom newAtom =  Atom();
+            newAtom.setNombre(it.key());
+            newAtom.setRelation(it.value().at(0));
+            newAtom.setQuantity(it.value().at(1));
+            newAtom.setIdDestination(it.value().at(2));
+            primalsAtoms->push(*&newAtom);  
+        }
         //cout << it.key() <<"  " << *it <<endl;
         //cout << newAtom->getNombre() <<" " << newAtom->getRelation()<<endl;
     }
