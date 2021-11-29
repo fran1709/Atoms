@@ -311,7 +311,6 @@ class Grafo {
                     }
                 }
             }
-
             // show the paths
             //showPath(route);
             this->caminos.clear();

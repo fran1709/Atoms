@@ -128,63 +128,67 @@ void reproduction(Grafo *&pGrafo, MatrixAdjacency* pMatrix) {
     NodoGrafo* node = NULL;
     NodoGrafo* node2 = NULL;
     vector<NodoGrafo*> atomosIguales;
-    atomosIguales.clear();
+    
     // selecciono uno
-    int cont = 0;
+    //int cont = 0;
     int size = pGrafo->getNodos().size();
-    int randChoice = rand() % size;
-    node = pGrafo->getNodos().at(randChoice);
-    atomosIguales.push_back(node);
+    //int randChoice = rand() % size;
+    //node = pGrafo->getNodos().at(randChoice);
+    //atomosIguales.push_back(node);
 
     // muestro cual es el nodo seleccionado
     // cout<<"nuevo"<<endl;
     // cout << node->getInfo()->getName()<<"->"<<node->getInfo()->getId()<<endl;
-
-    // busco nodos del mismo tipo
-    
-    for (int iter=0; iter<size; iter++) {
-        if(pGrafo->getNodos().at(iter)->getInfo()->getName().compare(node->getInfo()->getName())==0 && 
-            pGrafo->getNodos().at(iter)->getInfo()->getId() != node->getInfo()->getId()) {
-            node2 = pGrafo->getNodos().at(iter);
-            atomosIguales.push_back(pGrafo->getNodos().at(iter));
-            //cout << node2->getInfo()->getName()<<"->"<<node2->getInfo()->getId()<<endl;
+    for (int itera=0; itera<size; itera++) {
+        atomosIguales.clear();
+        node = pGrafo->getNodos().at(itera);
+        atomosIguales.push_back(node);
+        // busco nodos del mismo tipo
+        
+        for (int iter=0; iter<size; iter++) {
+            if(pGrafo->getNodos().at(iter)->getInfo()->getName().compare(node->getInfo()->getName())==0 && 
+                pGrafo->getNodos().at(iter)->getInfo()->getId() != node->getInfo()->getId()) {
+                node2 = pGrafo->getNodos().at(iter);
+                atomosIguales.push_back(pGrafo->getNodos().at(iter));
+                //cout << node2->getInfo()->getName()<<"->"<<node2->getInfo()->getId()<<endl;
+            }
         }
-    }
 
-    cout << "Nodos en lista"<<endl;
-    for (std::vector<NodoGrafo*>::iterator current = atomosIguales.begin() ; current != atomosIguales.end(); ++current) {
-        NodoGrafo* actual = (*current);
-        cout << actual->getInfo()->getName() << "--" <<actual->getInfo()->getId()<<endl;
-    }
-
-    //obtencio de caminos dijkstra a todos los nodos.
-    pGrafo->dijkstra(pMatrix->getMatrix(), node->getInfo()->getId());
-    vector<Arco*> caminos= pGrafo->getCamino();
-    // tratando de leer el mismo camino
-    cout<< "mismo camino"<<endl;
-    for (int i = 0; i < size; i++) {
-        cout << i << "\t\t" << caminos.at(i)->getPeso() << endl;
-        if(i == node2->getInfo()->getId() && caminos.at(i)->getPeso()<=25){ 
-            // si hay camino se crea un nuevo arco entre ellos
-            pGrafo->addArc(node, node2, caminos.at(i)->getPeso());
-            // se reproducen
-            Atom* newAtom = new Atom(node->getInfo()->getName());
-            newAtom->setNombre(node->getInfo()->getName());
-            pGrafo->addNode(newAtom);
-            // se direcciona al arco padre
-            pGrafo->addArc(newAtom, node->getInfo(), caminos.at(i)->getPeso());
-            //pMatrix->updateMatriz(pGrafo);
-            pGrafo->getRegistro()->addAtomos(1);
-            // se crea otra matriz y se sobre escribe en la anterior
-            MatrixAdjacency *matrix = new MatrixAdjacency();
-            matrix->updateMatriz(pGrafo);
-            pMatrix = matrix;
+        cout << "Nodos en lista"<<endl;
+        for (std::vector<NodoGrafo*>::iterator current = atomosIguales.begin() ; current != atomosIguales.end(); ++current) {
+            NodoGrafo* actual = (*current);
+            cout << actual->getInfo()->getName() << "--" <<actual->getInfo()->getId()<<endl;
         }
-    }
 
-    pGrafo->printCounters();
-    //pGrafo->dijkstra(pMatrix->getMatrix(), node->getInfo()->getId());
-    
+        //obtencio de caminos dijkstra a todos los nodos.
+        pGrafo->dijkstra(pMatrix->getMatrix(), node->getInfo()->getId());
+        vector<Arco*> caminos= pGrafo->getCamino();
+        // tratando de leer el mismo camino
+        //cout<< "mismo camino"<<endl;
+        for (int i = 0; i < size; i++) {
+            //cout << i << "\t\t" << caminos.at(i)->getPeso() << endl;
+            if(i == node2->getInfo()->getId() && (caminos.at(i)->getPeso()<25 || caminos.at(i)->getPeso()<INT_MAX)){ 
+                // si hay camino se crea un nuevo arco entre ellos
+                pGrafo->addArc(node, node2, caminos.at(i)->getPeso());
+                // se reproducen
+                Atom* newAtom = new Atom(node->getInfo()->getName());
+                newAtom->setNombre(node->getInfo()->getName());
+                pGrafo->addNode(newAtom);
+                // se direcciona al arco padre
+                pGrafo->addArc(newAtom, node->getInfo(), caminos.at(i)->getPeso());
+                //pMatrix->updateMatriz(pGrafo);
+                pGrafo->getRegistro()->addAtomos(1);
+                // se crea otra matriz y se sobre escribe en la anterior
+                cout << "Nuevo Atomo creado"<<endl;
+                MatrixAdjacency *matrix = new MatrixAdjacency();
+                matrix->updateMatriz(pGrafo);
+                pMatrix = matrix;
+            }
+        }
+
+        pGrafo->printCounters();
+        //pGrafo->dijkstra(pMatrix->getMatrix(), node->getInfo()->getId());
+    }
 }
 
 #endif // _UPDATING_

@@ -85,12 +85,12 @@ void MatrixAdjacency::updateHashTable(Grafo *&pGrafo) {
 
 	// agrega cada nodo al hash table con un indice numerico respectivo.
 	this->cont = 0;
-	cout << "Id\tPosicion en Matriz" <<endl;
+	//cout << "Id\tPosicion en Matriz" <<endl;
 	for (std::vector<NodoGrafo*>::iterator current = nodos.begin() ; current != nodos.end(); ++current) {
 		int newCont = this->cont;	
 		NodoGrafo* actual = (*current);
 		int newId = actual->getInfo()->getId();
-		cout <<newId  << "\t\t" << newCont <<endl;
+		//cout <<newId  << "\t\t" << newCont <<endl;
 		this->htNodos.insert(pair<int,int>(newId, newCont));
 		this->cont++;
     }
