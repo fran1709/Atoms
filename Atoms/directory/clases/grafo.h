@@ -15,7 +15,7 @@ class Grafo {
         vector<NodoGrafo*> listaNodos;
         bool esDirigido = true;
         std::map<int,NodoGrafo*> hashNodos;
-
+        int* camino;
 
         void resetNodes() {
             for (std::vector<NodoGrafo*>::iterator current = listaNodos.begin() ; current != listaNodos.end(); ++current) {
@@ -38,10 +38,14 @@ class Grafo {
         }
 
     public:
+        
         Grafo(bool pDirigido) {
             this->esDirigido =  pDirigido;
         }
 
+        int* getCamino() {
+            return this->camino;
+        }
         int getSize() {
             return this->listaNodos.size();
         }
@@ -299,6 +303,7 @@ class Grafo {
 
             // show the paths
             showPath(route);
+            camino = route;
         }
 };
 

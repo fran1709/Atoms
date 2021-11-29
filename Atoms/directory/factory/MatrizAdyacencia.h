@@ -88,7 +88,7 @@ void MatrixAdjacency::updateHashTable(Grafo &pGrafo) {
 		int *newCont = new int(this->cont);	
 		NodoGrafo* actual = (*current);
 		int newId = actual->getInfo()->getId();
-		//cout <<newId  << "\t\t" << *newCont <<endl;
+		cout <<newId  << "\t\t" << *newCont <<endl;
 		this->htNodos.insert(pair<int,int*>(newId, newCont));
 		this->cont++;
     }
