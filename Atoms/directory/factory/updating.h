@@ -6,12 +6,18 @@
 #include "MatrizAdyacencia.h"
 #include "../clases/grafo.h"
 
+// Prototypes
+void craftUniverse(Grafo &pGrafo, int pQuantity);
+void bigBang(Grafo &pGrafo, int pQuantity, vector<NodoGrafo*> pNodos);
+void reproduction(Grafo &pGrafo, vector<NodoGrafo*> pNodos);
+
 /**
  * @brief Creación inicial del grafo.
  * 
  * @param pGrafo 
+ * @param pQuantity
  */
-void updateGrafo(Grafo &pGrafo) {
+void craftUniverse(Grafo &pGrafo, int pQuantity) {
     // Identando los atomos primordiales.
     stack<Atom>* primalAtoms = atomPrimals();
     Atom first = primalAtoms->top();
@@ -92,15 +98,45 @@ void updateGrafo(Grafo &pGrafo) {
     for (int it=0; it < pGrafo.getSize(); it++) {
         pGrafo.dijkstra(matrix.getMatrix(),it);
     }
+
+    // big bang 
+    bigBang(pGrafo, pQuantity, nodos);
     
 }
 
 /**
  * @brief Creación de n generaciones a partir del grafo creado inicialmente. 
  * 
+ * @param pGrafo
  * @param pQuantity 
  */
-void bigBang(int pQuantity) {
+void bigBang(Grafo &pGrafo, int pQuantity, vector<NodoGrafo*> pNodos) {
+    for (int iter=0; iter<pQuantity; iter++) {
+        reproduction(pGrafo, pNodos);
+    }
+}
+
+/**
+ * @brief Reproduce los atomos segun las reglas.
+ * 
+ * @param pGrafo 
+ * @param pNodos
+ */
+void reproduction(Grafo &pGrafo, vector<NodoGrafo*> pNodos) {
+    // variables necesarios
+    int weightLonger;
+    int weightShorter;
+    NodoGrafo* node = NULL;
+    
+    // selecciono uno
+    int cont = 0;
+    int randChoice = rand() % pNodos.size();
+    node = pNodos.at(randChoice); 
+
+    // muestro cual es el nodo seleccionado
+    cout << node->getInfo()->getName()<<endl;
+
+    // busco el nodo del mismo atomo mas cercano
 
 }
 

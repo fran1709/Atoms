@@ -88,7 +88,7 @@ void MatrixAdjacency::updateHashTable(Grafo &pGrafo) {
 		int *newCont = new int(this->cont);	
 		NodoGrafo* actual = (*current);
 		int newId = actual->getInfo()->getId();
-		cout <<newId  << "\t\t" << *newCont <<endl;
+		//cout <<newId  << "\t\t" << *newCont <<endl;
 		this->htNodos.insert(pair<int,int*>(newId, newCont));
 		this->cont++;
     }
@@ -126,7 +126,7 @@ void MatrixAdjacency::updateWeights(Grafo &pGrafo) {
 			//cout << segundoId << endl;
 			colum = htNodos.at(segundoId);
 			peso = actualArc->getPeso();
-			cout << *fila << "\t" << *colum << "\t"<< peso << endl;
+			//cout << *fila << "\t" << *colum << "\t"<< peso << endl;
 			// actualizo la matriz ahora que poseo la fila y columna del peso
 			this->matrix[*fila][*colum] = peso;
 		}

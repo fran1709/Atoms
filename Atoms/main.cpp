@@ -17,13 +17,12 @@ using namespace std;
 int main() {
     // Identando el grafo.
     Grafo atomsGame(true);
-    
-    // Cargamos el grafo de los nodos Atom.
-    updateGrafo(atomsGame);
 
     // solicitud de generaciones al usuario.
     int quantity;
     cout << "Cuántas generaciones desea ejecutar: ";
     cin >> quantity;
-    bigBang(quantity);
+
+    // craft the universe.
+    craftUniverse(atomsGame, quantity);
 }
