@@ -122,6 +122,30 @@ void bigBang(Grafo &pGrafo, int pQuantity, vector<NodoGrafo*> pNodos) {
  * @param pGrafo 
  * @param pNodos
  */
+int getShorter(NodoGrafo * node1, NodoGrafo * node2){
+    vector<Arco*> * adyacentes = node1->getArcs();
+    Arco * primerArco = adyacentes->at(0);
+    int peso = primerArco->getPeso();
+    for (std::vector<Arco*>::iterator current = adyacentes->begin() ; current != adyacentes->end(); ++current){
+        cout << "Peso iteracion: " << peso << endl;
+        Arco * actual = (*current);
+        int pesoActual = actual->getPeso();
+        if (pesoActual < peso){
+            peso = pesoActual;
+        }
+    }
+    vector<Arco*> * adyacentes2 = node2->getArcs();
+    for (std::vector<Arco*>::iterator current = adyacentes2->begin() ; current != adyacentes2->end(); ++current){
+        cout << "Peso iteracion: " << peso << endl;
+        Arco * actual = (*current);
+        int pesoActual = actual->getPeso();
+        if (pesoActual < peso){
+            peso = pesoActual;
+        }
+    }
+    return peso;
+}
+
 void reproduction(Grafo &pGrafo, vector<NodoGrafo*> pNodos) {
     // variables necesarios
     int weightLonger;
@@ -137,7 +161,10 @@ void reproduction(Grafo &pGrafo, vector<NodoGrafo*> pNodos) {
     cout << node->getInfo()->getName()<<endl;
 
     // busco el nodo del mismo atomo mas cercano
+    
 
+    // buscar el nodo mas cercano de cualquier tipo
+    getShorter(pGrafo.getNodo(0),pGrafo.getNodo(3));
 }
 
 #endif // _UPDATING_
