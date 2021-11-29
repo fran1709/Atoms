@@ -271,7 +271,7 @@ class Grafo {
          * @param pMatrix 
          * @param pStart 
          */
-        void dijkstra(int **pMatrix, int pStart){
+        int * dijkstra(int **pMatrix, int pStart){
             int size = this->getSize();
             int route[size];
             bool vertex[size];
@@ -299,6 +299,7 @@ class Grafo {
 
             // show the paths
             showPath(route);
+            return route;
         }
 };
 

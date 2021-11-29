@@ -122,7 +122,7 @@ void bigBang(Grafo &pGrafo, int pQuantity, vector<NodoGrafo*> pNodos) {
  * @param pGrafo 
  * @param pNodos
  */
-int getShorter(NodoGrafo * node1, NodoGrafo * node2){
+int getShorter(NodoGrafo * node1, NodoGrafo * node2){ //recibe 2 nodos y retorna el tamano del arco mas pequeno de los 2
     vector<Arco*> * adyacentes = node1->getArcs();
     Arco * primerArco = adyacentes->at(0);
     int peso = primerArco->getPeso();
@@ -144,6 +144,17 @@ int getShorter(NodoGrafo * node1, NodoGrafo * node2){
         }
     }
     return peso;
+}
+
+INodo * getClosestSame(NodoGrafo * inicio, Grafo &pGrafo){//recibe un nodo y retorna el nodo del mismo tipo mas cercano a el
+    vector<INodo*> deepPath = pGrafo.deepPath(inicio->getInfo());
+    string nombreBuscado = inicio->getInfo()->getName();
+    for (std::vector<INodo*>::iterator current = deepPath.begin(); current != deepPath.end(); current++){
+        INodo * actual = (*current);
+        if (actual->getName() == nombreBuscado){
+            return actual;
+        }
+    }
 }
 
 void reproduction(Grafo &pGrafo, vector<NodoGrafo*> pNodos) {
