@@ -10,11 +10,17 @@ class Arco {
         void* origen;
         void* destino;
         int peso;
+        int idOrigen;
+        int idDestino;
 
     public:
         Arco(void* pOrigen, void* pDestino, int pPeso) {
             this->origen = pOrigen;
             this->destino = pDestino;
+            this->peso = pPeso;
+        }
+        Arco(int pId, int pPeso) {
+            this->idOrigen = pId;
             this->peso = pPeso;
         }
 

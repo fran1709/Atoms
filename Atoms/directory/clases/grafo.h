@@ -15,7 +15,7 @@ class Grafo {
         vector<NodoGrafo*> listaNodos;
         bool esDirigido = true;
         std::map<int,NodoGrafo*> hashNodos;
-        int* camino;
+        vector<Arco*> caminos;
 
         void resetNodes() {
             for (std::vector<NodoGrafo*>::iterator current = listaNodos.begin() ; current != listaNodos.end(); ++current) {
@@ -43,8 +43,8 @@ class Grafo {
             this->esDirigido =  pDirigido;
         }
 
-        int* getCamino() {
-            return this->camino;
+        vector<Arco*> getCamino() {
+            return this->caminos;
         }
         int getSize() {
             return this->listaNodos.size();
@@ -266,6 +266,9 @@ class Grafo {
             cout << "Distancia mas corta de un nodo a todos." << endl;
             for (int i = 0; i < this->getSize(); i++) {
                 cout << i << "\t\t" << pDistance[i] << endl;
+                Arco* camino = new  Arco(i, pDistance[i]);
+                //cout << camino->getOrigen() << camino->getPeso()<<endl;
+                this->caminos.push_back(camino);
             }
         }
 
@@ -303,7 +306,6 @@ class Grafo {
 
             // show the paths
             showPath(route);
-            camino = route;
         }
 };
 

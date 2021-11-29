@@ -131,8 +131,8 @@ void reproduction(Grafo &pGrafo, vector<NodoGrafo*> pNodos, int** pMatrix) {
     atomosIguales.push_back(node);
 
     // muestro cual es el nodo seleccionado
-    //cout<<"nuevo"<<endl;
-    //cout << node->getInfo()->getName()<<"->"<<node->getInfo()->getId()<<endl;
+    // cout<<"nuevo"<<endl;
+    // cout << node->getInfo()->getName()<<"->"<<node->getInfo()->getId()<<endl;
 
     // busco el nodo del mismo atomo mas cercano en sus arcos
     for (int iter=0; iter<pNodos.size(); iter++) {
@@ -151,11 +151,11 @@ void reproduction(Grafo &pGrafo, vector<NodoGrafo*> pNodos, int** pMatrix) {
     }
 
     pGrafo.dijkstra(pMatrix, node->getInfo()->getId());
-    int* camino = pGrafo.getCamino();
+    vector<Arco*> caminos= pGrafo.getCamino();
     // tratando de leer el mismo camino
-    cout<< "mismo camino";
+    cout<< "mismo camino"<<endl ;
     for (int i = 0; i < pNodos.size(); i++) {
-        cout << i << "\t\t" << camino[i] << endl;
+        cout << i << "\t\t" << caminos.at(i)->getPeso() << endl;
     }
 }
 
