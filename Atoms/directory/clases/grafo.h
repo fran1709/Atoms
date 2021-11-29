@@ -7,6 +7,7 @@
 #include <queue>
 #include "Arco.h"
 #include <climits>
+#include "Report.h"
 
 using namespace std;
 
@@ -16,6 +17,8 @@ class Grafo {
         bool esDirigido = true;
         std::map<int,NodoGrafo*> hashNodos;
         vector<Arco*> caminos;
+        // registro del universo.
+        Report* registro = new Report();
 
         void resetNodes() {
             for (std::vector<NodoGrafo*>::iterator current = listaNodos.begin() ; current != listaNodos.end(); ++current) {
@@ -239,6 +242,10 @@ class Grafo {
             return point;
         }
 
+        Report* getRegistro() {
+            return this->registro;
+        }
+
         /**
          * @brief Find the path with the smallest weight value.
          * 
@@ -263,6 +270,7 @@ class Grafo {
          * @param pDistance 
          */
         void showPath(int pDistance[]){
+            this->caminos.clear();
             cout << "Distancia mas corta de un nodo a todos." << endl;
             for (int i = 0; i < this->getSize(); i++) {
                 cout << i << "\t\t" << pDistance[i] << endl;
@@ -305,7 +313,13 @@ class Grafo {
             }
 
             // show the paths
-            showPath(route);
+            //showPath(route);
+            this->caminos.clear();
+            for (int i = 0; i < this->getSize(); i++) {
+                Arco* camino = new  Arco(i, route[i]);
+                //cout << camino->getOrigen() << camino->getPeso()<<endl;
+                this->caminos.push_back(camino);
+            }
         }
 };
 

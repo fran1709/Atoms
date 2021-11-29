@@ -12,14 +12,14 @@ using namespace std;
 class MatrixAdjacency {
     private:
 		// geters & setters.
-		std::map<int,int*> htNodos;
+		std::map<int,int> htNodos;
         int mSize = 0; 
         int **matrix;
 		int cont = 0;
 		// methods.
-		void updateHashTable(Grafo &pGrafo);
-		void updateWeights(Grafo &pGrafo);
-		void defineMatrix(Grafo &pGrafo);
+		void updateHashTable(Grafo *&pGrafo);
+		void updateWeights(Grafo *&pGrafo);
+		void defineMatrix(Grafo *&pGrafo);
     public:
 		/**
 		 * @brief Construct a new Matriz Adyacencia object
@@ -28,7 +28,7 @@ class MatrixAdjacency {
 		// methods.
         int getMSize();
         void setMSize(int pVertices);
-		void updateMatriz(Grafo &pGrafo);
+		void updateMatriz(Grafo *&pGrafo);
 		int **getMatrix();
 		void mostrarMatriz();
 };
@@ -45,7 +45,7 @@ int** MatrixAdjacency::getMatrix(){
 	return this->matrix;
 }
 
-void MatrixAdjacency::setMSize(int pSize) {
+void MatrixAdjacency::setMSize(int pSize){
     this->mSize = pSize;
 }
 
@@ -54,9 +54,9 @@ void MatrixAdjacency::setMSize(int pSize) {
  * 
  * @param pGrafo 
  */
-void MatrixAdjacency::defineMatrix(Grafo &pGrafo) {
+void MatrixAdjacency::defineMatrix(Grafo *&pGrafo) {
 	// Defining size of the array.
-    this->mSize = pGrafo.getSize();
+    this->mSize = pGrafo->getSize();
 	
 	// Process for creating the matrix matrix.
 	this->matrix = new int*[this->mSize]; // matrix equals a new value of integer n.
@@ -78,18 +78,20 @@ void MatrixAdjacency::defineMatrix(Grafo &pGrafo) {
  * 
  * @param pGrafo 
  */
-void MatrixAdjacency::updateHashTable(Grafo &pGrafo) {
+void MatrixAdjacency::updateHashTable(Grafo *&pGrafo) {
 	// accedo a lista de nodos.
-	vector<NodoGrafo*> nodos = pGrafo.getNodos();
+	vector<NodoGrafo*> nodos = pGrafo->getNodos();
+	this->htNodos.clear();
 
 	// agrega cada nodo al hash table con un indice numerico respectivo.
+	this->cont = 0;
 	cout << "Id\tPosicion en Matriz" <<endl;
 	for (std::vector<NodoGrafo*>::iterator current = nodos.begin() ; current != nodos.end(); ++current) {
-		int *newCont = new int(this->cont);	
+		int newCont = this->cont;	
 		NodoGrafo* actual = (*current);
 		int newId = actual->getInfo()->getId();
-		cout <<newId  << "\t\t" << *newCont <<endl;
-		this->htNodos.insert(pair<int,int*>(newId, newCont));
+		cout <<newId  << "\t\t" << newCont <<endl;
+		this->htNodos.insert(pair<int,int>(newId, newCont));
 		this->cont++;
     }
 	cout << endl;
@@ -100,19 +102,20 @@ void MatrixAdjacency::updateHashTable(Grafo &pGrafo) {
  * 
  * @param pGrafo 
  */
-void MatrixAdjacency::updateWeights(Grafo &pGrafo) {
+void MatrixAdjacency::updateWeights(Grafo *&pGrafo) {
 	// variables 
 	vector<Arco*>* arcos;
 	int primerId;
 	int segundoId;
-	int *fila;
-	int *colum;
+	int fila;
+	int colum;
 	int peso;
 
 	// accedo a lista de nodos.
-	vector<NodoGrafo*> nodos = pGrafo.getNodos();
+	vector<NodoGrafo*> nodos = pGrafo->getNodos();
 
 	// recorro el vector y cargo la matriz
+	//cout << "Fila\tColumna\tPeso"<<endl;
 	for (std::vector<NodoGrafo*>::iterator current = nodos.begin() ; current != nodos.end(); ++current) {
 		NodoGrafo* actual = (*current);
 		primerId = actual->getInfo()->getId();
@@ -126,9 +129,10 @@ void MatrixAdjacency::updateWeights(Grafo &pGrafo) {
 			//cout << segundoId << endl;
 			colum = htNodos.at(segundoId);
 			peso = actualArc->getPeso();
-			//cout << *fila << "\t" << *colum << "\t"<< peso << endl;
+			
+			//cout << fila << "\t" << colum << "\t"<< peso << endl;
 			// actualizo la matriz ahora que poseo la fila y columna del peso
-			this->matrix[*fila][*colum] = peso;
+			this->matrix[fila][colum] = peso;
 		}
     }
 }
@@ -138,7 +142,7 @@ void MatrixAdjacency::updateWeights(Grafo &pGrafo) {
  * 
  * @param pGrafo 
  */
-void MatrixAdjacency::updateMatriz(Grafo &pGrafo) {
+void MatrixAdjacency::updateMatriz(Grafo *&pGrafo) {
 	// I create the array of 0
 	defineMatrix(pGrafo);
 

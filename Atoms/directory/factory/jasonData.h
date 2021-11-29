@@ -12,6 +12,7 @@
 #include <string>
 #include <stack>
 #include "../nlohmann/json.hpp" //Have to install library  
+#include "../clases/Atom.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -67,6 +68,7 @@ stack<Atom>* atomPrimals() {
             newAtom.setRelation(it.value().at(0));
             newAtom.setQuantity(it.value().at(1));
             newAtom.setIdDestination(it.value().at(2));
+            newAtom.setTipo("Atomo");
             primalsAtoms->push(*&newAtom);  
         }
         //cout << it.key() <<"  " << *it <<endl;

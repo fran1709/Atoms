@@ -4,12 +4,11 @@
 #include <stack>
 #include "jasonData.h"
 #include "MatrizAdyacencia.h"
-#include "../clases/grafo.h"
 
 // Prototypes
-void craftUniverse(Grafo &pGrafo, int pQuantity);
-void bigBang(Grafo &pGrafo, int pQuantity, vector<NodoGrafo*> pNodos, int** matrix);
-void reproduction(Grafo &pGrafo, vector<NodoGrafo*> pNodos, int** matrix);
+void craftUniverse(Grafo *&pGrafo, int pQuantity);
+void bigBang(Grafo *&pGrafo, int pQuantity, MatrixAdjacency* pMatrix);
+void reproduction(Grafo *&pGrafo, MatrixAdjacency* pMatrix);
 
 /**
  * @brief Creación inicial del grafo.
@@ -17,7 +16,7 @@ void reproduction(Grafo &pGrafo, vector<NodoGrafo*> pNodos, int** matrix);
  * @param pGrafo 
  * @param pQuantity
  */
-void craftUniverse(Grafo &pGrafo, int pQuantity) {
+void craftUniverse(Grafo *&pGrafo, int pQuantity) {
     // Identando los atomos primordiales.
     stack<Atom>* primalAtoms = atomPrimals();
     Atom first = primalAtoms->top();
@@ -36,11 +35,12 @@ void craftUniverse(Grafo &pGrafo, int pQuantity) {
     // Agregamos los nodos al grafo.
     Atom allAtoms[] = {first, second, third, fourth, five, six};
     for(int i=0; i<6; i++) { // para cada nodo
-        pGrafo.addNode(&allAtoms[i]);   
+        pGrafo->addNode(&allAtoms[i]);  
+        pGrafo->getRegistro()->addAtomos(1);
     }
 
     // Agregando arcos a los nodos
-    vector<NodoGrafo*> nodos = pGrafo.getNodos();
+    vector<NodoGrafo*> nodos = pGrafo->getNodos();
     //pGrafo.addArc(&first, &third, 15);
     //pGrafo.addArc(&second, &first, 10);
      //pGrafo.addArc(&second, &third, 70);
@@ -59,15 +59,15 @@ void craftUniverse(Grafo &pGrafo, int pQuantity) {
         for (std::vector<NodoGrafo*>::iterator curre = nodos.begin() ; curre != nodos.end(); ++curre) {
             NodoGrafo* actu = (*curre);
             if (actual->getInfo()->getName().compare("Inti") == 0) {
-                pGrafo.addArc(actual, actu, weight);
+                pGrafo->addArc(actual, actu, weight);
                 break;
             } else {
                 if (idDest == cont) {
-                    pGrafo.addArc(actual, actu, weight);
+                    pGrafo->addArc(actual, actu, weight);
                 } else if (idDes2 == cont) {
-                    pGrafo.addArc(actual, actu, weight2);
+                    pGrafo->addArc(actual, actu, weight2);
                 } else if(idDes3 == cont ) {
-                    pGrafo.addArc(actual, actu, weight3);
+                    pGrafo->addArc(actual, actu, weight3);
                 }
             }
             cont++;
@@ -80,11 +80,11 @@ void craftUniverse(Grafo &pGrafo, int pQuantity) {
     // cout <<"Atomo: " <<third.getNombre() << "\tVinculo: " << third.getRelation() << endl;
     // cout <<endl;
 
-    pGrafo.printCounters();
+    pGrafo->printCounters();
 
     // matriz adyacencia
-    MatrixAdjacency matrix = MatrixAdjacency();
-    matrix.updateMatriz(pGrafo);
+    MatrixAdjacency *matrix = new MatrixAdjacency();
+    matrix->updateMatriz(pGrafo);
 
     // dijkstra
     // for (int it=0; it < pGrafo.getSize(); it++) {
@@ -92,8 +92,7 @@ void craftUniverse(Grafo &pGrafo, int pQuantity) {
     // }
 
     // big bang 
-    bigBang(pGrafo, pQuantity, nodos, matrix.getMatrix());
-    
+    bigBang(pGrafo, pQuantity, matrix);  
 }
 
 /**
@@ -103,10 +102,16 @@ void craftUniverse(Grafo &pGrafo, int pQuantity) {
  * @param pQuantity 
  * @param pMatrix
  */
-void bigBang(Grafo &pGrafo, int pQuantity, vector<NodoGrafo*> pNodos, int** pMatrix) {
+void bigBang(Grafo *&pGrafo, int pQuantity, MatrixAdjacency* pMatrix) {
     for (int iter=0; iter<pQuantity; iter++) {
-        reproduction(pGrafo, pNodos, pMatrix);
+        reproduction(pGrafo, pMatrix);
     }
+    //pMatrix->updateMatriz(*&pGrafo);
+    cout<<"Cantidad de Atomos: " <<pGrafo->getRegistro()->getCantAtomos() <<endl;
+    // MatrixAdjacency two = MatrixAdjacency();
+    // two.updateMatriz(pGrafo);
+    //pMatrix->updateMatriz(pGrafo);
+
 }
 
 /**
@@ -116,30 +121,32 @@ void bigBang(Grafo &pGrafo, int pQuantity, vector<NodoGrafo*> pNodos, int** pMat
  * @param pNodos
  * @param pMatrix
  */
-void reproduction(Grafo &pGrafo, vector<NodoGrafo*> pNodos, int** pMatrix) {
+void reproduction(Grafo *&pGrafo, MatrixAdjacency* pMatrix) {
     // variables necesarios
     int weightLonger;
     int weightShorter;
     NodoGrafo* node = NULL;
     NodoGrafo* node2 = NULL;
     vector<NodoGrafo*> atomosIguales;
-    
+    atomosIguales.clear();
     // selecciono uno
     int cont = 0;
-    int randChoice = rand() % pNodos.size();
-    node = pNodos.at(randChoice); 
+    int size = pGrafo->getNodos().size();
+    int randChoice = rand() % size;
+    node = pGrafo->getNodos().at(randChoice);
     atomosIguales.push_back(node);
 
     // muestro cual es el nodo seleccionado
     // cout<<"nuevo"<<endl;
     // cout << node->getInfo()->getName()<<"->"<<node->getInfo()->getId()<<endl;
 
-    // busco el nodo del mismo atomo mas cercano en sus arcos
-    for (int iter=0; iter<pNodos.size(); iter++) {
-        if(pNodos.at(iter)->getInfo()->getName().compare(node->getInfo()->getName())==0 && 
-            pNodos.at(iter)->getInfo()->getId() != node->getInfo()->getId()) {
-            node2 = pNodos.at(iter);
-            atomosIguales.push_back(pNodos.at(iter));
+    // busco nodos del mismo tipo
+    
+    for (int iter=0; iter<size; iter++) {
+        if(pGrafo->getNodos().at(iter)->getInfo()->getName().compare(node->getInfo()->getName())==0 && 
+            pGrafo->getNodos().at(iter)->getInfo()->getId() != node->getInfo()->getId()) {
+            node2 = pGrafo->getNodos().at(iter);
+            atomosIguales.push_back(pGrafo->getNodos().at(iter));
             //cout << node2->getInfo()->getName()<<"->"<<node2->getInfo()->getId()<<endl;
         }
     }
@@ -150,13 +157,34 @@ void reproduction(Grafo &pGrafo, vector<NodoGrafo*> pNodos, int** pMatrix) {
         cout << actual->getInfo()->getName() << "--" <<actual->getInfo()->getId()<<endl;
     }
 
-    pGrafo.dijkstra(pMatrix, node->getInfo()->getId());
-    vector<Arco*> caminos= pGrafo.getCamino();
+    //obtencio de caminos dijkstra a todos los nodos.
+    pGrafo->dijkstra(pMatrix->getMatrix(), node->getInfo()->getId());
+    vector<Arco*> caminos= pGrafo->getCamino();
     // tratando de leer el mismo camino
-    cout<< "mismo camino"<<endl ;
-    for (int i = 0; i < pNodos.size(); i++) {
+    cout<< "mismo camino"<<endl;
+    for (int i = 0; i < size; i++) {
         cout << i << "\t\t" << caminos.at(i)->getPeso() << endl;
+        if(i == node2->getInfo()->getId() && caminos.at(i)->getPeso()<=25){ 
+            // si hay camino se crea un nuevo arco entre ellos
+            pGrafo->addArc(node, node2, caminos.at(i)->getPeso());
+            // se reproducen
+            Atom* newAtom = new Atom(node->getInfo()->getName());
+            newAtom->setNombre(node->getInfo()->getName());
+            pGrafo->addNode(newAtom);
+            // se direcciona al arco padre
+            pGrafo->addArc(newAtom, node->getInfo(), caminos.at(i)->getPeso());
+            //pMatrix->updateMatriz(pGrafo);
+            pGrafo->getRegistro()->addAtomos(1);
+            // se crea otra matriz y se sobre escribe en la anterior
+            MatrixAdjacency *matrix = new MatrixAdjacency();
+            matrix->updateMatriz(pGrafo);
+            pMatrix = matrix;
+        }
     }
+
+    pGrafo->printCounters();
+    //pGrafo->dijkstra(pMatrix->getMatrix(), node->getInfo()->getId());
+    
 }
 
 #endif // _UPDATING_
